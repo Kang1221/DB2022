@@ -3,6 +3,10 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Menu_DBManager extends JFrame{
+	String name[]={"신규 등록","정보 수정","정보 삭제"};
+	JMenuItem mi_area[]=new JMenuItem[3], mi_agency[]=new JMenuItem[3], mi_owner[]=new JMenuItem[3],
+			mi_building[]=new JMenuItem[3], mi_sale[]=new JMenuItem[3];
+	
 	public Menu_DBManager() {
 		Color b=new Color(244,244,244);  
 		Font f1 = new Font("아임크리수진", Font.PLAIN, 13);
@@ -12,7 +16,8 @@ public class Menu_DBManager extends JFrame{
 		setBackground(b);
 		getContentPane().setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		setVisible(true);
+		
 		JMenuBar m = new JMenuBar();
         setJMenuBar( m );
         
@@ -20,18 +25,90 @@ public class Menu_DBManager extends JFrame{
         JMenu m_agency = new JMenu("부동산 정보 관리");     
         JMenu m_owner = new JMenu("집주인 정보 관리");
         JMenu m_building = new JMenu("건물 정보 관리");     
-        JMenu m_sale = new JMenu("매물 관리");     
-        JMenu m_seeAll = new JMenu("전체 매물 보기"); 
+        JMenu m_sale = new JMenu("매물 정보 관리");     
+        JMenu m_seeAll = new JMenu("DB 데이터 보기"); 
         m_area.setFont(f1);		m.add(m_area);		m_agency.setFont(f1);		m.add(m_agency);
         m_owner.setFont(f1);	m.add(m_owner);		m_building.setFont(f1);		m.add(m_building);
-        m_sale.setFont(f1);		m.add(m_sale);		m_seeAll.setFont(f1);		m.add(m_seeAll);
+        m_sale.setFont(f1);		m.add(m_sale);		m_seeAll.setFont(f1);	
+        //모든 데이터 보기는 JMenuItem 없음
+        m_seeAll.addActionListener(new MyActionListener());
+        m.add(m_seeAll);
         
-        JMenuItem i_insert = new JMenuItem("신규 등록");
-        JMenuItem i_modi = new JMenuItem("기존 정보 관리");     
-        m_area.add(i_insert);
-        m_area.add(i_modi);
+        for(int i=0; i< 3; i++){
+	        mi_area[i]=new JMenuItem(name[i]);		mi_area[i].addActionListener(new MyActionListener());    	m_area.add(mi_area[i]);
+	        mi_agency[i]=new JMenuItem(name[i]);	mi_agency[i].addActionListener(new MyActionListener());    	m_agency.add(mi_agency[i]);
+	        mi_owner[i]=new JMenuItem(name[i]);		mi_owner[i].addActionListener(new MyActionListener());    	m_owner.add(mi_owner[i]);
+	        mi_building[i]=new JMenuItem(name[i]);	mi_building[i].addActionListener(new MyActionListener());   m_building.add(mi_building[i]);
+	        mi_sale[i]=new JMenuItem(name[i]);		mi_sale[i].addActionListener(new MyActionListener());    	m_sale.add(mi_sale[i]);
+        }
 
 
-		setVisible(true);
 	}
+	class MyActionListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+        	String cmd = ae.getActionCommand();
+        	System.out.println(cmd);
+            JMenuItem item = (JMenuItem)ae.getSource();
+            System.out.println(item+" "+cmd);
+            if(item == null) {
+            	new INSERT_AREA();
+            }
+            
+            else if(item==mi_area[0]){
+               new INSERT_AREA();
+            }
+            else if(item==mi_area[1]){
+            	//지역 수정
+            }
+            else if(item==mi_area[2]){
+            	//지역 삭제
+            }
+            
+            else if(item==mi_agency[0]){
+            	new INSERT_AGENCY();
+            }
+            else if(item==mi_agency[1]){
+            	//부동산 수정
+            }
+            else if(item==mi_agency[2]){
+            	//부동산 삭제
+            }
+            
+            else if(item==mi_owner[0]){
+            	new INSERT_OWNER();
+            }
+            else if(item==mi_owner[1]){
+            	//집주인 수정
+            }
+            else if(item==mi_owner[2]){
+            	//집주인 삭제
+            }
+            
+            else if(item==mi_building[0]){
+            	new INSERT_BUILDING();
+            }
+            else if(item==mi_building[1]){
+            	//건물 수정
+            }
+            else if(item==mi_building[2]){
+            	//건물 삭제
+            }
+            
+            else if(item==mi_sale[0]){
+            	new INSERT_SALE();
+            }
+            else if(item==mi_sale[1]){
+            	//매물 수정
+            }
+            else if(item==mi_sale[2]){
+            	//매물 삭제
+            }
+            	
+        }
+        
+    }
+
+
 }

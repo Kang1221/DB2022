@@ -54,17 +54,25 @@ public class INSERT_SALE extends JFrame implements ActionListener{
 		lbl9.setBounds(220, 400, 200, 20);
 		lbl9.setFont(f1);
 		
+		JLabel won1 = new JLabel("만원");
+		won1.setBounds(340, 320, 120, 20);
+		won1.setFont(f1);
+		JLabel won2 = new JLabel("만원");
+		won2.setBounds(520, 320, 120, 20);
+		won2.setFont(f1);
+		
+		
 		//텍스트 필드 생성
 		txt1 = new JTextField(5); 
 		txt1.setBounds(220, 70, 100, 20);
 
-		txt2 = new JTextField(20); 
+		txt2 = new JTextField("Aid000", 20); 
 		txt2.setBounds(220, 120, 100, 20);
 		
-		txt3 = new JTextField(20); 
+		txt3 = new JTextField("Oid000", 20); 
 		txt3.setBounds(220, 170, 100, 20);
 		
-		txt4 = new JTextField(20); 
+		txt4 = new JTextField("Lid000", 20); 
 		txt4.setBounds(220, 220, 100, 20);
 		
 		txt6 = new JTextField(20); //매매가
@@ -73,7 +81,7 @@ public class INSERT_SALE extends JFrame implements ActionListener{
 		txt7 = new JTextField(20); //보증금
 		txt7.setBounds(400, 320, 120, 20);
 		
-		txt8 = new JTextField(20); //빌딩아이디
+		txt8 = new JTextField("Bid000", 20); //빌딩아이디
 		
 		txt8.setBounds(220, 370, 100, 20);
 		txt9 = new JTextField(20); //상세주소
@@ -83,8 +91,9 @@ public class INSERT_SALE extends JFrame implements ActionListener{
 		getContentPane().add(lbl2);		getContentPane().add(txt2);
 		getContentPane().add(lbl3);		getContentPane().add(txt3);
 		getContentPane().add(lbl4);		getContentPane().add(txt4);
-		getContentPane().add(lbl5);		
-		getContentPane().add(lbl6);		getContentPane().add(txt6);  getContentPane().add(txt7);
+		getContentPane().add(lbl5);		getContentPane().add(lbl6);		
+		getContentPane().add(txt6);  	getContentPane().add(won1);
+		getContentPane().add(txt7); 	getContentPane().add(won2);
 		getContentPane().add(lbl8);		getContentPane().add(txt8);
 		getContentPane().add(lbl9);		getContentPane().add(txt9);
 		
@@ -120,6 +129,7 @@ public class INSERT_SALE extends JFrame implements ActionListener{
 	 @Override
 		public void actionPerformed(ActionEvent e) {
 	        Connection conn = null;
+	        String id = "";
 	        try{
 	            String url = "jdbc:mysql://localhost/DB2022Team11";
 	 
@@ -128,14 +138,14 @@ public class INSERT_SALE extends JFrame implements ActionListener{
 	        	String password ="1234";
 
 	            conn = DriverManager.getConnection(url, user, password);
-	            System.out.println("Insert_AREA Successfully Connection!");	//연결 확인 메세지
+	            System.out.println("Insert_SALE Successfully Connection!");	//연결 확인 메세지
 			
 
-	            String id_num, id, agency_id, owner_id, area_id, rent_type, date, building_id , address;
+	            String id_num, agency_id, owner_id, area_id, rent_type, date, building_id , address;
 	            int price, deposit;
-	            id_num = txt1.getText();					id = "Pid00" + id_num;
+	            id_num = txt1.getText();					
 	            agency_id = txt2.getText(); 				owner_id = txt3.getText();   		   
-	            area_id = txt4.getText();					rent_type = null;			
+	            area_id = txt4.getText();					rent_type = " ";			
 	            price = Integer.parseInt(txt6.getText());	
 	            deposit = Integer.parseInt(txt7.getText());				
 	            building_id = txt8.getText();			address = txt9.getText();
@@ -143,7 +153,11 @@ public class INSERT_SALE extends JFrame implements ActionListener{
 	            // 현재 날짜 구하기
 	            LocalDate now = LocalDate.now();
 	            date = now.toString();
-	            System.out.println(date);
+	            
+	            if(id_num.length() == 1) { id = "Pid00" + id_num; }
+	            else if(id_num.length() == 2) {	id = "Pid0" + id_num; }       
+	            else if(id_num.length() == 3) {id = "Pid" + id_num;}         	
+	            else  {JOptionPane.showMessageDialog(null, "id는 세자리까지 입력가능합니다.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);}
 
 	            if(rd1.isSelected())
 	            	rent_type = rd1.getText();
@@ -155,7 +169,7 @@ public class INSERT_SALE extends JFrame implements ActionListener{
 					System.out.println("건물 종류를 선택해주세요"); //프레임에 띄우기
 	            
 	            PreparedStatement pStmt = conn.prepareStatement(
-	            		"insert into DB2022_AGENCY values(?,?,?,?,?,?,?,?,?,?)");
+	            		"insert into DB2022_SALE values(?,?,?,?,?,?,?,?,?,?)");
 	            pStmt.setString(1, id);
 	          	pStmt.setString(2, agency_id);
 	           	pStmt.setString(3, owner_id);
@@ -167,11 +181,15 @@ public class INSERT_SALE extends JFrame implements ActionListener{
 	           	pStmt.setString(9, building_id);
 	           	pStmt.setString(10, address);
 	           	pStmt.executeUpdate();
-
+	        	JOptionPane.showMessageDialog(null, "입력하신 매물을 등록하였습니다.");
 	        }
-	        
 	        catch (SQLException sqle) {
 	        	System.out.println("SQLException : " + sqle);
+	        	if(sqle.equals("java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '"+ id +"' for key 'db2022_area.PRIMARY'"))
+	        		JOptionPane.showMessageDialog(null, "새로운 매물 등록에 실패했습니다. \n 입력하신 id가 이미 존재합니다.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+	        	
+	        	else 
+	        		JOptionPane.showMessageDialog(null, "새로운 매물 등록에 실패했습니다. \n", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE); 
 	        }
 	
  }

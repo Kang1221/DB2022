@@ -43,7 +43,7 @@ public class INSERT_BUILDING extends JFrame implements ActionListener{
 		txt2 = new JTextField(20); 
 		txt2.setBounds(220, 150, 100, 20);        
 		
-		txt4 = new JTextField(20); 
+		txt4 = new JTextField("Lid000",20); 
 		txt4.setBounds(220, 290, 200, 20);
 
 		getContentPane().add(lbl1);		getContentPane().add(txt1);
@@ -87,6 +87,7 @@ public class INSERT_BUILDING extends JFrame implements ActionListener{
 	 @Override
 		public void actionPerformed(ActionEvent e) {
 	        Connection conn = null;
+	        String id = "";
 	        try{
 	            String url = "jdbc:mysql://localhost/DB2022Team11";
 	 
@@ -98,11 +99,15 @@ public class INSERT_BUILDING extends JFrame implements ActionListener{
 	            System.out.println("Insert_AREA Successfully Connection!");	//연결 확인 메세지
 			
 	            String id_num = txt1.getText();
-	            String id = "Bid00" + id_num;
 	            String name = txt2.getText();
-	            String type= null;
+	            String type= " ";
 	            String area_id = txt4.getText();
 	        
+	            if(id_num.length() == 1) { id = "Bid00" + id_num; }
+	            else if(id_num.length() == 2) {	id = "Bid0" + id_num; }       
+	            else if(id_num.length() == 3) {id = "Bid" + id_num;}         	
+	            else  {JOptionPane.showMessageDialog(null, "id는 세자리까지 입력가능합니다.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);}
+	            
 	            if(rd1.isSelected())
 	            	 type = rd1.getText();
 	            else if(rd2.isSelected())
@@ -116,18 +121,25 @@ public class INSERT_BUILDING extends JFrame implements ActionListener{
 				
 	            	
 	            System.out.println(type);
-	            
+	            System.out.println(id + " "+ name + " " + type + " " + area_id);
 	           PreparedStatement pStmt = conn.prepareStatement(
-	            		"insert into DB2022_AGENCY values(?,?,?,?)");
+	            		"insert into DB2022_BUILDING values(?,?,?,?)");
 	            pStmt.setString(1, id);
 	          	pStmt.setString(2, name);
 	           	pStmt.setString(3, type);
 	          	pStmt.setString(4, area_id);
 	           	pStmt.executeUpdate();
-
+	           	
+	           	
+	        	JOptionPane.showMessageDialog(null, "입력하신 건물정보를 등록하였습니다.");
 	        }
 	        catch (SQLException sqle) {
 	        	System.out.println("SQLException : " + sqle);
+	        	if(sqle.equals("java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '"+ id +"' for key 'db2022_building.PRIMARY'"))
+	        		JOptionPane.showMessageDialog(null, "새로운 건물 등록에 실패했습니다. \n 입력하신 id가 이미 존재합니다.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+	        	
+	        	else 
+	        		JOptionPane.showMessageDialog(null, "새로운 건물 등록에 실패했습니다. \n", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE); 
 	        }
 	
     }

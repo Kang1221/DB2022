@@ -61,6 +61,7 @@ public class INSERT_OWNER extends JFrame implements ActionListener{
 	 @Override
 		public void actionPerformed(ActionEvent e) {
 	        Connection conn = null;
+	        String id="";
 	        try{
 	            String url = "jdbc:mysql://localhost/DB2022Team11";
 	 
@@ -69,23 +70,32 @@ public class INSERT_OWNER extends JFrame implements ActionListener{
 	        	String password ="1234";
 
 	            conn = DriverManager.getConnection(url, user, password);
-	            System.out.println("Insert_AREA Successfully Connection!");	//연결 확인 메세지
+	            System.out.println("Insert_OWNER Successfully Connection!");	//연결 확인 메세지
 			
 	            String id_num = txt1.getText();
-	            String id = "Oid00" + id_num;
 	            String name = txt2.getText();
 	            String number = txt3.getText();
 			
+	            if(id_num.length() == 1) { id = "Oid00" + id_num; }
+	            else if(id_num.length() == 2) {	id = "Oid0" + id_num; }       
+	            else if(id_num.length() == 3) {id = "Oid" + id_num;}         	
+	            else  {JOptionPane.showMessageDialog(null, "id는 세자리까지 입력가능합니다.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);}
+	            
 	            PreparedStatement pStmt = conn.prepareStatement(
 	            		"insert into DB2022_OWNER values(?,?,?)");
 	            pStmt.setString(1, id);
 	          	pStmt.setString(2, name);
 	           	pStmt.setString(3, number);
 	           	pStmt.executeUpdate();
-
+	        	JOptionPane.showMessageDialog(null, "입력하신 집주인을 등록하였습니다.");
 	        }
 	        catch (SQLException sqle) {
 	        	System.out.println("SQLException : " + sqle);
+	        	if(sqle.equals("java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '"+ id +"' for key 'db2022_area.PRIMARY'"))
+	        		JOptionPane.showMessageDialog(null, "새로운 집주인 등록에 실패했습니다. \n 입력하신 id가 이미 존재합니다.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+	        	
+	        	else 
+	        		JOptionPane.showMessageDialog(null, "새로운 집주인 등록에 실패했습니다. \n", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);  
 	        }
 		}
 
