@@ -89,21 +89,22 @@ public class INSERT_BUILDING extends JFrame implements ActionListener{
 	        Connection conn = null;
 	        String id = "";
 	        try{
-	            String url = "jdbc:mysql://localhost/DB2022Team11";
-	 
+	            String url = "jdbc:mysql://localhost:3306/db2022team11";
+	       	 
 	        	//Database user, password
-	        	String  user = "testuser";
-	        	String password ="1234";
+	        	String  user = "DBTeam11";
+	        	String password ="DBTeam11";
 
 	            conn = DriverManager.getConnection(url, user, password);
 	            System.out.println("Insert_AREA Successfully Connection!");	//연결 확인 메세지
-			
+	            conn.setAutoCommit(false);
+	            
 	            String id_num = txt1.getText();
 	            String name = txt2.getText();
 	            String type= " ";
 	            String area_id = txt4.getText();
 	        
-	            if(id_num.length() == 1) { id = "Bid00" + id_num; }
+	            if(id_num.length() <= 1) { id = "Bid00" + id_num; }
 	            else if(id_num.length() == 2) {	id = "Bid0" + id_num; }       
 	            else if(id_num.length() == 3) {id = "Bid" + id_num;}         	
 	            else  {JOptionPane.showMessageDialog(null, "id는 세자리까지 입력가능합니다.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);}
@@ -117,29 +118,36 @@ public class INSERT_BUILDING extends JFrame implements ActionListener{
 	            else if(rd4.isSelected())
 	            	 type = rd4.getText();
 	            else 
-					System.out.println("건물 종류를 선택해주세요");
+	            	JOptionPane.showMessageDialog(null, "건물 종류를 선택해주세요", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
 				
 	            	
 	            System.out.println(type);
 	            System.out.println(id + " "+ name + " " + type + " " + area_id);
 	           PreparedStatement pStmt = conn.prepareStatement(
 	            		"insert into DB2022_BUILDING values(?,?,?,?)");
-	            pStmt.setString(1, id);
+	           
+	           	if(id_num.isEmpty()) { //id는 not null
+	            	JOptionPane.showMessageDialog(null, "건물 id번호를 입력해주세요. \n", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE); 
+	            }   
+	           	else { pStmt.setString(1, id);}
 	          	pStmt.setString(2, name);
 	           	pStmt.setString(3, type);
 	          	pStmt.setString(4, area_id);
 	           	pStmt.executeUpdate();
-	           	
+	           	conn.commit();
 	           	
 	        	JOptionPane.showMessageDialog(null, "입력하신 건물정보를 등록하였습니다.");
 	        }
 	        catch (SQLException sqle) {
+	        	sqle.printStackTrace();
+				try {
+					if(conn!=null)
+						conn.rollback();
+				}catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 	        	System.out.println("SQLException : " + sqle);
-	        	if(sqle.equals("java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '"+ id +"' for key 'db2022_building.PRIMARY'"))
-	        		JOptionPane.showMessageDialog(null, "새로운 건물 등록에 실패했습니다. \n 입력하신 id가 이미 존재합니다.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
-	        	
-	        	else 
-	        		JOptionPane.showMessageDialog(null, "새로운 건물 등록에 실패했습니다. \n", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE); 
+	        	JOptionPane.showMessageDialog(null, "새로운 건물 등록에 실패했습니다. \n", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE); 
 	        }
 	
     }

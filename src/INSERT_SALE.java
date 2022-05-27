@@ -4,6 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import javax.swing.*;
+
+import org.w3c.dom.ls.LSOutput;
+
 import java.awt.event.*;
 import java.awt.*;
 
@@ -131,30 +134,29 @@ public class INSERT_SALE extends JFrame implements ActionListener{
 	        Connection conn = null;
 	        String id = "";
 	        try{
-	            String url = "jdbc:mysql://localhost/DB2022Team11";
+	            String url = "jdbc:mysql://localhost:3306/db2022team11";
 	 
 	        	//Database user, password
-	        	String  user = "testuser";
-	        	String password ="1234";
+	        	String  user = "DBTeam11";
+	        	String password ="DBTeam11";
 
 	            conn = DriverManager.getConnection(url, user, password);
 	            System.out.println("Insert_SALE Successfully Connection!");	//연결 확인 메세지
-			
+	            conn.setAutoCommit(false);
 
-	            String id_num, agency_id, owner_id, area_id, rent_type, date, building_id , address;
-	            int price, deposit;
+	            String id_num, agency_id, owner_id, area_id, rent_type, date, building_id , address, price, deposit;
 	            id_num = txt1.getText();					
 	            agency_id = txt2.getText(); 				owner_id = txt3.getText();   		   
-	            area_id = txt4.getText();					rent_type = " ";			
-	            price = Integer.parseInt(txt6.getText());	
-	            deposit = Integer.parseInt(txt7.getText());				
+	            area_id = txt4.getText();					rent_type = null;	
+	            price = txt6.getText();	
+	            deposit = txt7.getText();				
 	            building_id = txt8.getText();			address = txt9.getText();
 	            
 	            // 현재 날짜 구하기
 	            LocalDate now = LocalDate.now();
 	            date = now.toString();
 	            
-	            if(id_num.length() == 1) { id = "Pid00" + id_num; }
+	            if(id_num.length() <= 1) { id = "Pid00" + id_num; }
 	            else if(id_num.length() == 2) {	id = "Pid0" + id_num; }       
 	            else if(id_num.length() == 3) {id = "Pid" + id_num;}         	
 	            else  {JOptionPane.showMessageDialog(null, "id는 세자리까지 입력가능합니다.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);}
@@ -166,30 +168,40 @@ public class INSERT_SALE extends JFrame implements ActionListener{
 	            else if(rd3.isSelected())
 	            	rent_type = rd3.getText();
 	            else 
-					System.out.println("건물 종류를 선택해주세요"); //프레임에 띄우기
+	            	JOptionPane.showMessageDialog(null, "건물 종류를 선택해주세요 \n", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
 	            
 	            PreparedStatement pStmt = conn.prepareStatement(
 	            		"insert into DB2022_SALE values(?,?,?,?,?,?,?,?,?,?)");
-	            pStmt.setString(1, id);
+	            
+	           	if(id_num.isEmpty()) {//id는 not null                  
+	            	JOptionPane.showMessageDialog(null, "건물 id번호를 입력해주세요. \n", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE); 
+	            }   
+	           	else { pStmt.setString(1, id);}
 	          	pStmt.setString(2, agency_id);
 	           	pStmt.setString(3, owner_id);
 	          	pStmt.setString(4, area_id);
 	           	pStmt.setString(5, rent_type);
-	          	pStmt.setInt(6, price);
-	           	pStmt.setInt(7, deposit);
-	          	pStmt.setString(8, date);
+	           	if(!price.isBlank())   {pStmt.setInt(6, Integer.parseInt(price));}
+	           	else {pStmt.setString(6,null);}
+	           	if(!deposit.isBlank()) {pStmt.setInt(7, Integer.parseInt(deposit));}
+	           	else {pStmt.setString(7,null);}
+	           	pStmt.setString(8, date);
 	           	pStmt.setString(9, building_id);
 	           	pStmt.setString(10, address);
 	           	pStmt.executeUpdate();
+	           	conn.commit();
 	        	JOptionPane.showMessageDialog(null, "입력하신 매물을 등록하였습니다.");
 	        }
 	        catch (SQLException sqle) {
+	        	sqle.printStackTrace();
+				try {
+					if(conn!=null)
+						conn.rollback();
+				}catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 	        	System.out.println("SQLException : " + sqle);
-	        	if(sqle.equals("java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '"+ id +"' for key 'db2022_area.PRIMARY'"))
-	        		JOptionPane.showMessageDialog(null, "새로운 매물 등록에 실패했습니다. \n 입력하신 id가 이미 존재합니다.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
-	        	
-	        	else 
-	        		JOptionPane.showMessageDialog(null, "새로운 매물 등록에 실패했습니다. \n", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE); 
+	        	JOptionPane.showMessageDialog(null, "새로운 매물 등록에 실패했습니다. \n", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE); 
 	        }
 	
  }
