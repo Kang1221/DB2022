@@ -5,7 +5,7 @@ import java.awt.event.*;
 public class Menu_DBManager extends JFrame{
 	String name[]={"신규 등록","정보 수정","정보 삭제"};
 	JMenuItem mi_area[]=new JMenuItem[3], mi_agency[]=new JMenuItem[3], mi_owner[]=new JMenuItem[3],
-			mi_building[]=new JMenuItem[3], mi_sale[]=new JMenuItem[3];
+			mi_building[]=new JMenuItem[3], mi_sale[]=new JMenuItem[3],	mi_view;
 	
 	public Menu_DBManager() {
 		Color b=new Color(244,244,244);  
@@ -21,26 +21,28 @@ public class Menu_DBManager extends JFrame{
 		JMenuBar m = new JMenuBar();
         setJMenuBar( m );
         
-        JMenu m_area = new JMenu("지역 정보 관리");
+
         JMenu m_agency = new JMenu("부동산 정보 관리");     
         JMenu m_owner = new JMenu("집주인 정보 관리");
         JMenu m_building = new JMenu("건물 정보 관리");     
         JMenu m_sale = new JMenu("매물 정보 관리");     
-        JMenu m_seeAll = new JMenu("DB 데이터 보기"); 
-        m_area.setFont(f1);		m.add(m_area);		m_agency.setFont(f1);		m.add(m_agency);
+        //JMenu m_seeAll = new JMenu("DB 데이터 보기"); 
+        m_agency.setFont(f1);	m.add(m_agency);
         m_owner.setFont(f1);	m.add(m_owner);		m_building.setFont(f1);		m.add(m_building);
-        m_sale.setFont(f1);		m.add(m_sale);		m_seeAll.setFont(f1);	
+        m_sale.setFont(f1);		m.add(m_sale);		
+        //m_seeAll.setFont(f1);	
+      
         //모든 데이터 보기는 JMenuItem 없음
-        m_seeAll.addActionListener(new MyActionListener());
-        m.add(m_seeAll);
+        //m_seeAll.addActionListener(new MyActionListener());
+        //m.add(m_seeAll);
         
-        for(int i=0; i< 3; i++){
-	        mi_area[i]=new JMenuItem(name[i]);		mi_area[i].addActionListener(new MyActionListener());    	m_area.add(mi_area[i]);
+        for(int i=0; i< 3; i++) {
 	        mi_agency[i]=new JMenuItem(name[i]);	mi_agency[i].addActionListener(new MyActionListener());    	m_agency.add(mi_agency[i]);
 	        mi_owner[i]=new JMenuItem(name[i]);		mi_owner[i].addActionListener(new MyActionListener());    	m_owner.add(mi_owner[i]);
 	        mi_building[i]=new JMenuItem(name[i]);	mi_building[i].addActionListener(new MyActionListener());   m_building.add(mi_building[i]);
 	        mi_sale[i]=new JMenuItem(name[i]);		mi_sale[i].addActionListener(new MyActionListener());    	m_sale.add(mi_sale[i]);
         }
+        //mi_view = new JMenuItem("실행");	mi_view.addActionListener(new MyActionListener());    	m_seeAll.add(mi_view);
 
 
 	}
@@ -49,24 +51,9 @@ public class Menu_DBManager extends JFrame{
         @Override
         public void actionPerformed(ActionEvent ae) {
         	String cmd = ae.getActionCommand();
-        	System.out.println(cmd);
             JMenuItem item = (JMenuItem)ae.getSource();
-            System.out.println(item+" "+cmd);
-            if(item == null) {
-            	new INSERT_AREA();
-            }
             
-            else if(item==mi_area[0]){
-               new INSERT_AREA();
-            }
-            else if(item==mi_area[1]){
-            	//지역 수정
-            }
-            else if(item==mi_area[2]){
-            	//지역 삭제
-            }
-            
-            else if(item==mi_agency[0]){
+            if(item==mi_agency[0]){
             	new INSERT_AGENCY();
             }
             else if(item==mi_agency[1]){
@@ -105,7 +92,10 @@ public class Menu_DBManager extends JFrame{
             else if(item==mi_sale[2]){
             	//매물 삭제
             }
-            	
+            
+            else if(item==mi_view){
+            	//매물 보기 
+            }
         }
         
     }

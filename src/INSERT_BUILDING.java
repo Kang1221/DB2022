@@ -92,8 +92,8 @@ public class INSERT_BUILDING extends JFrame implements ActionListener{
 	            String url = "jdbc:mysql://localhost:3306/db2022team11";
 	       	 
 	        	//Database user, password
-	        	String  user = "DBTeam11";
-	        	String password ="DBTeam11";
+	        	String  user = "DB2022Team11";
+	        	String password ="DB2022Team11";
 
 	            conn = DriverManager.getConnection(url, user, password);
 	            System.out.println("Insert_AREA Successfully Connection!");	//연결 확인 메세지
