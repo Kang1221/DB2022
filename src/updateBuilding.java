@@ -21,8 +21,8 @@ public class updateBuilding extends JFrame implements ActionListener{
 	private int NUMBER_COLUMN = 0;
 	
 	// 보기 & 수정 버튼
-	private JButton Show_Button = new JButton("보기");
-	private JButton Update_Button = new JButton("수정");
+	private RoundedButton Show_Button = new RoundedButton("보기");
+	private RoundedButton Update_Button = new RoundedButton("수정");
 	Container me = this;
 	
 	JPanel panel;
@@ -34,6 +34,10 @@ public class updateBuilding extends JFrame implements ActionListener{
 	int count = 0;
 	
 	public updateBuilding() {
+		Font f1 = new Font("아임크리수진",Font.PLAIN, 13);
+		Setlabel_1.setFont(f1);
+		Setlabel_2.setFont(f1);
+		
 		rd1 = new JRadioButton("아파트"); 	
         rd2 = new JRadioButton("단독주택");	
         rd3 = new JRadioButton("빌라");		
@@ -56,6 +60,7 @@ public class updateBuilding extends JFrame implements ActionListener{
 		UpdatePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 		UpdatePanel.add(Setlabel_1);
 		UpdatePanel.add(setName);
+		UpdatePanel.add(new JLabel("  "));
 		UpdatePanel.add(Setlabel_2);
 		UpdatePanel.add(rd1);	UpdatePanel.add(rd2);	UpdatePanel.add(rd3);	UpdatePanel.add(rd4);
 
@@ -180,7 +185,6 @@ public class updateBuilding extends JFrame implements ActionListener{
 			try {
 				String columnName_1 = model.getColumnName(2);  // 건물 이름
 				String columnName_2 = model.getColumnName(3);  // 건물종류
-				System.out.println(columnName_1+ "   " + columnName_2);
 				if(columnName_1 == "building_name" && columnName_2 == "building_type") {
 					for(int i=0; i<table.getRowCount();i++){
 						// '선택' 체크박스가 체크되었을 경우 컬럼 값 가져옴

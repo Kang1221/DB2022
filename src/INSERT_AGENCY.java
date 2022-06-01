@@ -63,8 +63,9 @@ public class INSERT_AGENCY extends JFrame implements ActionListener{
 
 		JPanel ShowAllPanel = new JPanel();
 		ShowAllPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-		ShowAllPanel.add(Show_Button);
 		ShowAllPanel.add(Insert_Button);
+		ShowAllPanel.add(Show_Button);
+
 		
 		JPanel UpdatePanel = new JPanel();
 		UpdatePanel.setLayout(new GridLayout(5,3));

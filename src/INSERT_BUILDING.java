@@ -78,8 +78,8 @@ public class INSERT_BUILDING extends JFrame implements ActionListener{
         
         JPanel ShowAllPanel = new JPanel();
 		ShowAllPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		ShowAllPanel.add(Show_Button);
 		ShowAllPanel.add(Insert_Button);
+		ShowAllPanel.add(Show_Button);
 		
 		JPanel UpdatePanel = new JPanel();
 		UpdatePanel.setLayout(new GridLayout(6, 4));
