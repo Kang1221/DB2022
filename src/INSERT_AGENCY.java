@@ -36,7 +36,7 @@ public class INSERT_AGENCY extends JFrame implements ActionListener{
 		Color b=new Color(244,244,244);
 		setBackground(b);
 		setSize(700, 700);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		Font f1 = new Font("아임크리수진",Font.PLAIN, 13);
 			
@@ -187,7 +187,7 @@ public class INSERT_AGENCY extends JFrame implements ActionListener{
 	 	            //ID 네자리 이상 불가능
 		            if(id_num.length() > 6) {JOptionPane.showMessageDialog(null, "id는 세자리까지 입력가능합니다.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);}	            
 		           	//ID null값 불가능
-	 	           	if(id_num=="Aid000" || id_num.isEmpty()) {                  
+	 	           	if(id_num.equals("Aid000") || id_num.isEmpty()) {                  
 	 	            	JOptionPane.showMessageDialog(null, "부동산 id번호를 입력해주세요. \n", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE); 
 	 	            }   
 	 	           	else { pStmt.setString(1, id_num);}

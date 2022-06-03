@@ -41,7 +41,7 @@ public class INSERT_BUILDING extends JFrame implements ActionListener{
 		setBackground(b);
 		setSize(700, 700);
 		getContentPane().setLayout(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		Font f1 = new Font("아임크리수진",Font.PLAIN, 13);
 		
